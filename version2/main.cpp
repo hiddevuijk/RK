@@ -31,7 +31,7 @@ int main()
 	double xend = 200.;
 	vector<double> y(401,1.);
 	y[1] = 100;
-	double h = 0.0001;
+	double h = 0.1;
 		
 	integrator(x,y,h,xend,eulerInt,der);
 
