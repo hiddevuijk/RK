@@ -1,11 +1,12 @@
 #ifndef GUARD_adaptRKInt_h
 #define GUARD_adaptRKInt_h
 
+
+#include "integrator.h"
 #include <vector>
 
-void adaptRKInt(const double& y, const double& dy,
-	const double& x, const double& h, double& yout,
-	double& yerr)
+void adaptRKInt(const double& x ,double& y,const double& dy, const double& h,
+		double& yerr, intDef::DER2 derivs)
 {
 
 	// perameters:
@@ -21,12 +22,27 @@ void adaptRKInt(const double& y, const double& dy,
 	static const double dc5=-277./14336;
 	static const double dc6=c6-0.25;
 
+	double k1,k2,k3,k4,k5,k6;
+
 	double ytemp = y + b21*h*dy;
+
 	derivs(x+a2*h,ytemp,k2);
-
 	ytemp = y+h*(b31*dy+b32*k2);
-	derivs(
 
+	derivs(x+a3*h,ytemp,k3);
+	ytemp = y+h*(b41*dy + b41*k2 + b43*k3)
+	
+	derivs(x+a4*h,ytemp,k4);
+	ytemp = y+h*(b51*dy + b52*k2 + b53*k3 + b54*k4);
+
+	derivs(x+a5*h,ytemp,k5);
+	ytemp = y+h*(b61*dy+d62*k2+b63*k3+b64*k4+b65*k5);
+
+	derivs(x+a6*h,ytemp,k6);
+	y += h*(c1*d7+c3*k3+c4*k4+c6*k6);
+	yerr = h*(dc1*dy+dc3k3+dc4*k4+dc5*k5+dc6*k6)
+
+}
 
 
 

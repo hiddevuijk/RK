@@ -2,6 +2,7 @@
 #define GUARD_integrator_h
 
 #include <vector>
+#include <math.h>
 
 namespace intDef {
 	typedef void (*DER1)(const double&, const std::vector<double>&, std::vector<double>&);
@@ -69,6 +70,31 @@ void integrator(double& x,double& y, double h,const double& xend,
 		}
 	}
 }
+
+
+void adaptIntegrator(double& x, double& y, double& xend, intDef::DER2 derivs)
+{
+
+	static const int maxstep = 100;
+	double h = 0.5;
+	static const double tiny = 1.e-30;
+	double eps = 5.e-5;
+
+	int istep = 0;
+
+	double dy;
+	while( istep<maxstep and x <= xend) {
+		++istep;
+
+		derivs(x,y,dy);
+		yscal = abs(y) + abs(h*dy) + tiny;
+	
+
+
+
+
+
+
 
 
 #endif
