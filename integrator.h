@@ -10,6 +10,16 @@ namespace intDef {
 	typedef void (*SS2)(double&,double&,double, DER2);
 
 }
+/*
+	Driver for intagration of ODE with multiple dependent variables.
+
+	Integration from x until xend, with stepsize h.
+	Initial conditions: x,y.
+	SingleStep: integration routine.
+	derivs: the ODEs.
+
+*/
+
 
 void integrator(double& x, std::vector<double>& y, double h,const double& xend,
 	intDef::SS1 singleStep, intDef::DER1 derivs)
@@ -30,6 +40,16 @@ void integrator(double& x, std::vector<double>& y, double h,const double& xend,
 	}
 }
 
+
+/*
+	Driver for intagration of ODE with a single dependent variable.
+
+	Integration from x until xend, with stepsize h.
+	Initial conditions: x,y.
+	SingleStep: integration routine.
+	derivs: the ODE.
+
+*/
 
 void integrator(double& x,double& y, double h,const double& xend,
 	intDef::SS2 singleStep, intDef::DER2 derivs)

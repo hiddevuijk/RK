@@ -5,6 +5,17 @@
 
 #include <vector>
 
+
+/*
+	Fourth-order Runge-Kutta integration, with multiple
+	dependent variables.
+
+	Independent variable:	x
+	Dependent variables:	y[i]
+	Stepsize:	h
+	Derivatives are defined in derivs; see integrator.h.
+*/
+
 void rkInt(double& x, std::vector<double>& y, double h, intDef::DER1 derivs)
 {
 	std::vector<double>::size_type imax = y.size();
@@ -35,6 +46,15 @@ void rkInt(double& x, std::vector<double>& y, double h, intDef::DER1 derivs)
 
 	x += h;
 }
+
+/*
+	Fourth-order Runge-Kutta integration, with a single dependent variable.
+
+	Independent variable:	x
+	Single dependent variables:	y
+	Stepsize:	h
+	Derivatives are defined in derivs; see integrator.h.
+*/
 
 
 
