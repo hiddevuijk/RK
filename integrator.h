@@ -10,6 +10,10 @@ namespace intDef {
 	typedef void (*DER2)(const double&, const double&, double&);
 	typedef void (*SS2)(double&,double&,double, DER2);
 
+	typedef void (*adaptSS2)(const double&,const double&,const double&,
+		const double&,double&,double&, DER2);
+
+
 }
 /*
 	Driver for intagration of ODE with multiple dependent variables.
@@ -72,14 +76,19 @@ void integrator(double& x,double& y, double h,const double& xend,
 }
 
 
-void adaptIntegrator(double& x, double& y, double& xend, intDef::DER2 derivs)
+void adaptIntegrator(double& x, double& y, double& xend,
+	intDef::adaptSS2 singleStep, intDef::DER2 derivs)
 {
 
 	static const int maxstep = 100;
-	double h = 0.5;
+	double h = 0.01;
 	static const double tiny = 1.e-30;
-	double eps = 5.e-5;
+	double eps = 5.e-8;
 
+	double yerr;
+	double emax;
+	double ytemp;
+	double yscal;
 	int istep = 0;
 
 	double dy;
@@ -87,10 +96,25 @@ void adaptIntegrator(double& x, double& y, double& xend, intDef::DER2 derivs)
 		++istep;
 
 		derivs(x,y,dy);
-		yscal = abs(y) + abs(h*dy) + tiny;
-	
+		yscal=fabs(y)+fabs(h*dy) + tiny;
+		if(x+h>xend) h = xend-x;
 
+		while(true) {	
+			singleStep(x,y,dy,h,ytemp,yerr,derivs);
+			emax = fabs(yerr/yscal/eps);
+			if(emax<=1) break;
+			h = fmax(fabs(0.9*h*pow(emax,-0.25)),0.25*fabs(h));
+				
+		}
+		x += h;
+		if(emax>1.89e-4) h=0.9*h*pow(emax,-0.2);
+		else h *= 4;
+		y = ytemp;
+	}
+}	
 
+		
+		
 
 
 
