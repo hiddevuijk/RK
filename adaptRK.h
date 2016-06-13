@@ -5,8 +5,6 @@
 #include <math.h>
 
 
-
-
 namespace intDef {
 	typedef void (*DER1)(const double&, const std::vector<double>&, std::vector<double>&);
 	typedef void (*SS1)(double&,std::vector<double>&,double, DER1);
@@ -15,8 +13,6 @@ namespace intDef {
 
 	typedef void (*adaptSS2)(const double&,const double&,const double&,
 		const double&,double&,double&, DER2);
-
-
 }
 
 
@@ -24,7 +20,6 @@ void adaptRKInt(const double& x ,const double& y,const double& dy, const double&
 		double& ytemp, double& yerr, intDef::DER2 derivs)
 {
 
-	// perameters:
  	static const double a2=0.2,a3=0.3,a4=0.6,a5=1.,a6=0.875,
 		b21=0.2,b31=3./40,b32=9./40,b41=.3,b42=-0.9,b43=1.2,
 		b51=-11./54,b52=2.5,b53=-70./27,b54=35./27,
