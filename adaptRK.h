@@ -78,6 +78,7 @@ void adaptRKInt(const double& x ,const std::vector<double>& y,
 	static const double dc6=c6-0.25;
 
 	std::vector<double>::size_type imax = y.size();
+	std::vector<double> yerrVec(imax,0.0);
 	std::vector<double> k2(imax,0.0);
 	std::vector<double> k3(imax,0.0);
 	std::vector<double> k4(imax,0.0);
@@ -115,16 +116,19 @@ void adaptRKInt(const double& x ,const std::vector<double>& y,
 		yerr = yerr > erri ? yerr : erri;
 	}	
 	yerr *= h;
+
+
+
 }
 
 void adaptIntegrator(double& x, double& y, double& xend,
 	intDef::adaptSS2 singleStep, intDef::DER2 derivs)
 {
 
-	static const int maxstep = 100;
+	static const int maxstep = 100000;
 	double h = 0.01;
 	static const double tiny = 1.e-30;
-	double eps = 5.e-8;
+	double eps = 5.e-15;
 
 	double yerr;
 	double emax;
@@ -160,7 +164,7 @@ void adaptIntegrator(double& x, std::vector<double>& y, double& xend,
 	static const int maxstep = 100;
 	double h = 0.01;
 	static const double tiny = 1.e-30;
-	double eps = 5.e-8;
+	double eps = 5.e-9;
 
 	double yerr;
 	double emax;

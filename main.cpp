@@ -30,7 +30,7 @@ int main()
 	double x = 1;
 	double xend = 20.;
 	double y = 1.;
-	double h = 0.00001;	
+	double h = 1.e-5;	
 	integrator(x,y,h,xend,rkInt,der);
 
 

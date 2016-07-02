@@ -86,10 +86,5 @@ void rkInt(double& x,double& y, double h, intDef::DER2 derivs)
 
 
 
-
-
-
-
-
 #endif
 
