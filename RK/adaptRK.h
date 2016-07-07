@@ -1,6 +1,12 @@
 #ifndef GUARD_adaptRK_h
 #define GUARD_adaptRK_h
 
+
+/*
+ *  set maxstep
+ */
+
+
 #include <vector>
 #include <math.h>
 #include <iostream>
@@ -17,7 +23,7 @@ namespace intDef {
 		const std::vector<double>&, const double&,std::vector<double>&, 
 		double&,intDef::DER1);
 
-	double absVec(const std::vector<double>&);
+	double maxVec(const std::vector<double>&);
 }
 
 
@@ -122,22 +128,21 @@ void adaptRKInt(const double& x ,const std::vector<double>& y,
 }
 
 void adaptIntegrator(double& x, double& y, double& xend,
-	intDef::adaptSS2 singleStep, intDef::DER2 derivs)
+	intDef::adaptSS2 singleStep, intDef::DER2 derivs,
+	double h, const double& eps,
+	const unsigned long int& maxstep)
 {
 
-	static const int maxstep = 100000;
-	double h = 0.01;
 	static const double tiny = 1.e-30;
-	double eps = 5.e-15;
 
 	double yerr;
 	double emax;
 	double ytemp;
 	double yscal;
-	int istep = 0;
+	unsigned long int istep = 0;
 
 	double dy;
-	while( istep<maxstep and x <= xend) {
+	while( istep<maxstep and x < xend) {
 		++istep;
 
 		derivs(x,y,dy);
@@ -156,20 +161,20 @@ void adaptIntegrator(double& x, double& y, double& xend,
 		else h *= 4;
 		y = ytemp;
 	}
+	std::cout<< h << std::endl;
 }	
 
 void adaptIntegrator(double& x, std::vector<double>& y, double& xend,
-	intDef::adaptSS1 singleStep, intDef::DER1 derivs)
+	intDef::adaptSS1 singleStep, intDef::DER1 derivs,
+	double h, const double& eps,
+	const unsigned long int& maxstep)
 {
-	static const int maxstep = 100;
-	double h = 0.01;
 	static const double tiny = 1.e-30;
-	double eps = 5.e-9;
 
 	double yerr;
 	double emax;
 	double yscal;
-	int istep = 0;
+	unsigned long int istep = 0;
 
 	std::vector<double>::size_type i;
 	std::vector<double>::size_type imax = y.size();
@@ -178,7 +183,7 @@ void adaptIntegrator(double& x, std::vector<double>& y, double& xend,
 	while( istep<maxstep and x <= xend) {
 		++istep;
 		derivs(x,y,dy);
-		yscal = intDef::absVec(y)+h*intDef::absVec(dy)+tiny;
+		yscal = intDef::maxVec(y)+h*intDef::maxVec(dy)+tiny;
 		if(x+h>xend) h = xend-x;
 
 		while(true) {	
@@ -198,11 +203,15 @@ void adaptIntegrator(double& x, std::vector<double>& y, double& xend,
 
 }	
 
-double intDef::absVec(const std::vector<double>& v)
+double intDef::maxVec(const std::vector<double>& v)
 {
-	double m=0;
-	for(int i=0;i<v.size();++i)
-		m += v[i]*v[i];
-	return sqrt(m)/v.size();
+	double max = v[0];
+	std::vector<double>::const_iterator it = v.begin();
+	while(it != v.end()) {
+		if (*it > max) max = *it;
+		++it;
+	}
+	return max;
 }
+
 #endif
